@@ -52,7 +52,7 @@ magnitude_V2 = data2.Var2;
 figure(1)
 plot(t_cuad,y_cuad, 'linewidth',1.5,'color','b')
 xlabel("Tiempo [s]")
-ylabel("Tension [V]")
+ylabel("Tensión [V]")
 title("Respuesta a la cuadrada f0=79.5Hz")
 grid on
 grid minor
@@ -63,9 +63,9 @@ plot(t_cuad,y_cuad, 'linewidth',1.5,'color',  'm')
 
 hold on
 semilogx(tiempo, magnitude_V, 'c', 'LineWidth', 1.5);
-legend('Original','Normalizado','Simulacion', 'Location', 'best');  % Leyenda
 
 plot(t,cuad, 'color','k')
+legend('Original','Normalizado','Simulación', 'Cuadrada','Location', 'best');  % Leyenda
 hold off
 
 %%
@@ -77,7 +77,7 @@ figure(2)
 [y_cuad,t_cuad] = lsim(H,cuad,t); 
 plot(t_cuad,y_cuad, 'linewidth',1.5,'color','b')
 xlabel("Tiempo [s]")
-ylabel("Tension [V]")
+ylabel("Tensión [V]")
 title("Respuesta a la cuadrada f0/10=7.95Hz")
 legend('Original', 'Location', 'best');  % Leyenda
 grid on
@@ -89,9 +89,10 @@ plot(t_cuad,y_cuad, 'linewidth',1,'color', 'm')
 
 hold on
 semilogx(tiempo1, magnitude_V1, 'c', 'LineWidth', 1.5);
-legend('Original','Normalizado','Simulacion', 'Location', 'best');  % Leyenda
 
 plot(t,cuad, 'color','k')
+legend('Original','Normalizado','Simulación', 'Cuadrada','Location', 'best');  % Leyenda
+
 hold off
 
 
@@ -104,7 +105,7 @@ figure(3)
 [y_cuad,t_cuad] = lsim(H,cuad,t); 
 plot(t_cuad,y_cuad, 'linewidth',1,'color','b')
 xlabel("Tiempo [s]")
-ylabel("Tension [V]")
+ylabel("Tensión [V]")
 title("Respuesta a la cuadrada 10f0=795Hz")
 legend('Original', 'Location', 'best');  % Leyenda
 grid on
@@ -116,7 +117,7 @@ plot(t_cuad,y_cuad, 'linewidth' ,1,'color','m')
 
 hold on
 semilogx(tiempo2, magnitude_V2, 'c', 'LineWidth', 1.5);
-legend('Original','Normalizado','Simulacion', 'Location', 'best');  % Leyenda
 
 plot(t,cuad, 'color','k')
+legend('Original','Normalizado','Simulación','Cuadrada', 'Location', 'best');  % Leyenda
 hold off
