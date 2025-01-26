@@ -13,7 +13,7 @@ f = @(X) 230.37*exp(-(2500/27)*X).*cos(491.35*X) ...
          - 9.71*exp(-6000*X) + 51408000*X.*exp(-6000*X);
 
 % Definir el rango de X
-X = linspace(0.001, 0.15, 1000); % Intervalo [0.001, 0.01] con 1000 puntos
+X = linspace(0.001, 0.06, 1000); % Intervalo [0.001, 0.01] con 1000 puntos
 
 % Evaluar la función
 Y = f(X);
@@ -31,24 +31,29 @@ grid minor;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Respuesta al impulso transferencia original y normalizado
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Función de transferencia original
-disp("La función de transferencia del sistema original es:");
-num1 = [50760000, 0, 50760000*500^2]; % Numerador
-den1 = conv([1, 2*6000, 6000^2], [1, 5000/27, 500^2]); % Denominador
-H = tf(num1, den1); % Crear el objeto de función de transferencia
+syms s;
 
-disp("La Respuesta al Impulso del sistema original es:");
-[y, t] = impulse(H); % Obtener la respuesta al impulso
+disp("La funcion de transferencia del sistema es:")
+H = (50760000*(s^2 + 500^2))/((s + 6000)^2 * (s^2 + s*(5000/27) + 500^2))
+
+disp("La Respuesta al Impulso del sistema es:")
+rta_impulso = ilaplace(H)
+
 
 %---
-% Función de transferencia normalizada
-disp("La función de transferencia del sistema normalizado es:");
-num2 = [75591081, 0, 75591081*500^2]; % Numerador
-den2 = conv([1, 186, 500^2], [1, 11678, 53279343]); % Denominador
-H2 = tf(num2, den2); % Crear el objeto de función de transferencia
+% Crear simbólicamente la función de transferencia
+syms s t
+% Numerador y denominador simbólicos
+numerador = 75591081 * (s^2 + 500^2);
+denominador = (s^2 + s*11678 + 53279343) * (s^2 + s*186 + 500^2);
+H2 = numerador / denominador;
 
-disp("La Respuesta al Impulso del sistema normalizado es:");
-[y2, t2] = impulse(H2); % Obtener la respuesta al impulso
+% Transformada inversa de Laplace (respuesta al impulso)
+rta_impulso = ilaplace(H2, s, t);
+
+% Mostrar la ecuación de la respuesta al impulso
+disp("La ecuación de la respuesta al impulso del sistema normalizado es:");
+disp(rta_impulso);
 
 
 %%%%%%%%%% 
@@ -56,6 +61,9 @@ disp("La Respuesta al Impulso del sistema normalizado es:");
 %%%%%%%%%%
 
 figure(2)
+s = tf('s');
+H = (50760000*(s^2 + 500^2))/((s + 6000)^2 * (s^2 + s*(5000/27) + 500^2))
+[y, t] = impulse(H); % Obtener la respuesta al impulso
 plot(t, y,'linewidth',1.5,'color','b');
 title("Respuesta al Impulso");
 xlabel("Tiempo (s)");
@@ -63,9 +71,11 @@ ylabel("Tensión (V)");
 grid on
 grid minor
 
-hold on 
-
-plot(t2, y2,'linewidth',1.5,'color','m');
+hold on
+s = tf('s');
+H = (75591081*(s^2 + 500^2))/((s^2 + s*11678 + 53279343) * (s^2 + s*186 + 500^2))
+[y, t] = impulse(H); % Obtener la respuesta al impulso
+plot(t, y,'linewidth',1.5,'color','m');
 legend('Original', 'Normalizado', 'Location', 'best');  % Leyenda
 
 hold off;
