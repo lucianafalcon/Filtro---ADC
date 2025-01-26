@@ -1,0 +1,71 @@
+%% Limpio todo
+clear all; %limpia variables
+close all; % cierra toda ventana/grafico abierta
+clc; % limpia la consola
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Respuesta al impulso transferencia original - analitico
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Definir la función como anónima
+f = @(X) 230.37*exp(-(2500/27)*X).*cos(491.35*X) ...
+         - 97.84*exp(-(2500/27)*X).*sin(491.35*X) ...
+         - 9.71*exp(-6000*X) + 51408000*X.*exp(-6000*X);
+
+% Definir el rango de X
+X = linspace(0.001, 0.15, 1000); % Intervalo [0.001, 0.01] con 1000 puntos
+
+% Evaluar la función
+Y = f(X);
+
+% Graficar la función
+figure(1);
+plot(X, Y, 'LineWidth', 1.5, 'Color', 'r'); % Línea verde con grosor 2
+title('Respuesta al Impulso');
+xlabel('Tiempo (s)');
+ylabel('Tensión (V)');
+grid on;
+grid minor;
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Respuesta al impulso transferencia original y normalizado
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Función de transferencia original
+disp("La función de transferencia del sistema original es:");
+num1 = [50760000, 0, 50760000*500^2]; % Numerador
+den1 = conv([1, 2*6000, 6000^2], [1, 5000/27, 500^2]); % Denominador
+H = tf(num1, den1); % Crear el objeto de función de transferencia
+
+disp("La Respuesta al Impulso del sistema original es:");
+[y, t] = impulse(H); % Obtener la respuesta al impulso
+
+%---
+% Función de transferencia normalizada
+disp("La función de transferencia del sistema normalizado es:");
+num2 = [75591081, 0, 75591081*500^2]; % Numerador
+den2 = conv([1, 186, 500^2], [1, 11678, 53279343]); % Denominador
+H2 = tf(num2, den2); % Crear el objeto de función de transferencia
+
+disp("La Respuesta al Impulso del sistema normalizado es:");
+[y2, t2] = impulse(H2); % Obtener la respuesta al impulso
+
+
+%%%%%%%%%% 
+%_GRAFICOS
+%%%%%%%%%%
+
+figure(2)
+plot(t, y,'linewidth',1.5,'color','b');
+title("Respuesta al Impulso");
+xlabel("Tiempo (s)");
+ylabel("Tensión (V)");
+grid on
+grid minor
+
+hold on 
+
+plot(t2, y2,'linewidth',1.5,'color','m');
+legend('Original', 'Normalizado', 'Location', 'best');  % Leyenda
+
+hold off;
